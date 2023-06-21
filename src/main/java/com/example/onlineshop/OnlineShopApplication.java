@@ -11,7 +11,7 @@ public class OnlineShopApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(OnlineShopApplication.class, args);
         PasswordEncoder encoder=context.getBean(PasswordEncoder.class);
-        System.out.println(encoder.encode("pass"));
+        System.out.println(encoder.encode("123456"));
     }
 
 }

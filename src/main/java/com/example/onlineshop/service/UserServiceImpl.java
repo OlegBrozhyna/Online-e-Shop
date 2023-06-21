@@ -15,12 +15,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -28,17 +30,50 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean save(UserDTO userDTO) {
-        if (Objects.equals(userDTO.getPassword(), userDTO.getMatchingPassword())) {
-            throw new RuntimeException("Password is not equals");
+        if (!Objects.equals(userDTO.getPassword(), userDTO.getMatchingPassword())) {
+            throw new RuntimeException("Passwords do not match");
         }
         User user = User.builder()
                 .name(userDTO.getUsername())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .email(userDTO.getEmail())
-               .role(Role.CLIENT)
+                .role(Role.CLIENT)
                 .build();
         userRepository.save(user);
         return true;
+    }
+@Override
+    public List<UserDTO> getAll(){
+        return userRepository.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+}
+
+    @Override
+    public User findByName(String name) {
+        return userRepository.findFirstByName(name);
+    }
+
+    @Override
+    public void updateProfile(UserDTO dto) {
+        User saveUser = userRepository.findFirstByName(dto.getUsername());
+        if (saveUser ==null){
+            throw new RuntimeException("User not found by name" + dto.getUsername());
+        }
+        boolean isChanged = false;
+        if (dto.getPassword()!=null && !dto.getPassword().isEmpty()){
+            saveUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+            isChanged =true;
+        }
+        if (!Objects.equals(dto.getEmail(), saveUser.getEmail())){
+            saveUser.setEmail(dto.getEmail());
+            isChanged=true;
+        }
+        if (isChanged){
+            userRepository.save(saveUser);
+
+        }
+
     }
 
     @Override
@@ -53,5 +88,11 @@ public class UserServiceImpl implements UserService {
                 user.getName(),
                 user.getPassword(),
                 roles);
+    }
+    private UserDTO toDto(User user){
+        return  UserDTO.builder()
+                .username(user.getName())
+                .email(user.getEmail())
+                .build();
     }
 }

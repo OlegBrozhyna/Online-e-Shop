@@ -1,0 +1,23 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<meta charset="UTF-8">
+<title>User list </title>
+</head>
+<body>
+
+
+<header th:insert="/fragments/menu :: #nav-menu"></header>
+
+<table border="1">
+
+    <tr>
+        <td>Name</td>
+        <td>Email</td>
+    </tr>
+    <tr th:each=" user : ${users}">
+        <td th:text="${user.username}"> Testname</td>
+        <td th:text="${user.email}"> Testemail</td>
+    </tr>
+</table>
+<a th:href="@{/users/new}"> Add new </a>
+</body>
+</html>

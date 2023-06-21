@@ -1,9 +1,11 @@
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
     <meta charset="UTF-8">
     <title>Add User</title>
 </head>
 <body>
+<header th:insert="/fragments/menu :: #nav-menu"></header>
+
+
 <form th:action="@{/users/new}" th:object="${user}" method="post">
     <table >
         <tr>
