@@ -42,12 +42,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return true;
     }
-@Override
-    public List<UserDTO> getAll(){
+
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
+
+    }
+
+    @Override
+    public List<UserDTO> getAll() {
         return userRepository.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
-}
+    }
 
     @Override
     public User findByName(String name) {
@@ -57,19 +64,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateProfile(UserDTO dto) {
         User saveUser = userRepository.findFirstByName(dto.getUsername());
-        if (saveUser ==null){
+        if (saveUser == null) {
             throw new RuntimeException("User not found by name" + dto.getUsername());
         }
         boolean isChanged = false;
-        if (dto.getPassword()!=null && !dto.getPassword().isEmpty()){
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
             saveUser.setPassword(passwordEncoder.encode(dto.getPassword()));
-            isChanged =true;
+            isChanged = true;
         }
-        if (!Objects.equals(dto.getEmail(), saveUser.getEmail())){
+        if (!Objects.equals(dto.getEmail(), saveUser.getEmail())) {
             saveUser.setEmail(dto.getEmail());
-            isChanged=true;
+            isChanged = true;
         }
-        if (isChanged){
+        if (isChanged) {
             userRepository.save(saveUser);
 
         }
@@ -89,8 +96,9 @@ public class UserServiceImpl implements UserService {
                 user.getPassword(),
                 roles);
     }
-    private UserDTO toDto(User user){
-        return  UserDTO.builder()
+
+    private UserDTO toDto(User user) {
+        return UserDTO.builder()
                 .username(user.getName())
                 .email(user.getEmail())
                 .build();
