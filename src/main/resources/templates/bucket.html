@@ -21,6 +21,11 @@
     <td th:text="${detail.amount}"></td>
     <td th:text="${detail.price}"></td>
     <td th:text="${detail.sum}"></td>
+    <td>
+      <form th:action="@{/bucket/remove/{productId}(productId=${detail.productId})}" method="post">
+        <button type="submit">Remove</button>
+      </form>
+    </td>
   </tr>
 </table>
 </body>

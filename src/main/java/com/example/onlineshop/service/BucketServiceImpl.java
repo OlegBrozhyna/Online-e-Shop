@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.lang.Double.parseDouble;
-
 @Service
 public class BucketServiceImpl implements BucketService {
     private final BucketRepository bucketRepository;
@@ -84,6 +82,14 @@ public class BucketServiceImpl implements BucketService {
         bucketDTO.setBucketDetails(new ArrayList<>(mapByProductId.values()));
         bucketDTO.aggregate();
         return bucketDTO;
+    }
+    @Override
+    public void removeProduct(Bucket bucket, Long productId) {
+        List<Product> products = bucket.getProducts();
+        if (products != null) {
+            products.removeIf(product -> product.getId().equals(productId));
+            bucketRepository.save(bucket);
+        }
     }
 
 }
