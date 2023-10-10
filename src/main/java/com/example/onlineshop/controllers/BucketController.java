@@ -4,7 +4,6 @@ import com.example.onlineshop.dto.BucketDTO;
 import com.example.onlineshop.service.BucketService;
 import com.example.onlineshop.service.UserService;
 import lombok.val;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +25,7 @@ public class BucketController {
     @GetMapping("/bucket")
     public String aboutBucket(Model model, Principal principal){
         if (principal==null){
-            model.addAttribute(" bucket", new BucketDTO());
+            model.addAttribute("bucket", new BucketDTO());
         }
         else {
             BucketDTO bucketDTO = bucketService.getBucketUser(principal.getName());
